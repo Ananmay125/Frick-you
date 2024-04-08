@@ -2,15 +2,12 @@
 #include <cstdlib>
 #include <ctime>
 #include <SFML/Graphics.hpp>
-#include<SFML/audio.hpp>
+#include <SFML/Audio.hpp>
 
 using namespace std;
 using namespace sf;
 
-sf::Music music;
-
 int main() {
-
     Music music1;
     if (!music1.openFromFile("assets/greenhill.ogg")) {
         return -1;
@@ -31,65 +28,6 @@ int main() {
     bool isJumping = false;
     bool isOnGround = false;
     Vector2f velocity(0, 0);
-    /*ing x;
-    string y;
-    string option;
-    string rules;
-    string rules2;
-    string rules3;
-    string rules4;
-    string rules5;
-    string rules6;
-    string rules7;
-    string rules8;
-    string rules9;
-    string rules10;
-    string rules11;
-    string understand;
-    string cards1;
-    string cards2;
-    string cards3;
-    string cards4;
-    string cards5;
-    string draw_card;
-
-    rules = "Title: Frick You Showdown";
-    rules2 = "Objective: Be the last player standing by avoiding picking the 'Frick You' card.";
-    rules3 = "Materials: A standard deck of cards";
-    rules4 = "Setup: Shuffle the deck of cards. Deal 5 cards to each player.";
-    rules5 = "Gameplay:";
-    rules6 = "Each player secretly selects one card from their hand to play, facedown";
-    rules7 = "Once all players have chosen their cards, everyone reveals their selections simultaneously.";
-    rules8 = "If both players reveal the same card the person who has the chance then would win";
-    rules9 = "If both the players took different card a new round begins";
-    rules11 = "Repeat steps 1 - 4 until there is only one player left.";
-    cards1 = "Frick you";
-    cards2 = "King";
-    cards3 = "pawn";
-    cards4 = "ligma";
-    cards5 = "sigma";
-
-    cout << "Hello! ";
-    cin >> x;
-    cout << "My name is gyatt wht is urs? ";
-    cin >> y;
-    cout << endl;
-    cout << "Glad to meet you " + y << endl;
-    cout << endl;
-    cout << "Wanna play a game? ";
-    cin >> option;
-
-    if (option == "yes" || option == "yeah" || option == "yeshsir" || option == "yea" || option == "ye") {
-        cout << endl;
-        cout << "cool let's start!" << endl;
-        cout << endl;
-        cin.get();
-    }
-    else {
-        cout << "Frick you!";
-        cin.get();
-        return 0;
-    }*/
 
     Color LightBlue(173, 216, 230);
     VideoMode desktopMode = VideoMode::getDesktopMode();
@@ -122,13 +60,10 @@ int main() {
     float scaleFactor = 50.0f / player.getGlobalBounds().width;
     player.setScale(scaleFactor, scaleFactor);
 
-    player.setPosition(0, frame.getSize().y - rectangleHeight - player.getGlobalBounds().height);
+    // Set player's initial position to be on the ground
+    player.setPosition(0, windowSize.y - rectangleHeight - player.getGlobalBounds().height);
 
     float playerSpeed = 0.5f;
-
-    float aspectRatio = float(frame.getSize().x) / float(frame.getSize().y);
-    sf::View view(sf::FloatRect(0, 0, 800, 600));
-    view.setViewport(sf::FloatRect(0, 0, 1, 1));
 
     while (frame.isOpen()) {
         Event event;
@@ -172,11 +107,12 @@ int main() {
         velocity.y += gravity;
         player.move(velocity);
 
-        if (player.getPosition().y >= 400) {
+        // Check for collision with the ground
+        if (player.getGlobalBounds().intersects(ground.getGlobalBounds())) {
             isOnGround = true;
             isJumping = false;
             velocity.y = 0;
-            player.setPosition(player.getPosition().x, 400);
+            player.setPosition(player.getPosition().x, ground.getPosition().y - player.getGlobalBounds().height);
         }
 
         frame.clear(LightBlue);
